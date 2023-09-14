@@ -34,6 +34,8 @@ import io.flutter.view.FlutterCallbackInformation
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.HashMap
+import android.util.Log
+
 
 
 class IncomingSmsReceiver : BroadcastReceiver() {
@@ -48,6 +50,12 @@ class IncomingSmsReceiver : BroadcastReceiver() {
         val messagesGroupedByOriginatingAddress = smsList.groupBy { it.originatingAddress }
         messagesGroupedByOriginatingAddress.forEach { group ->
             processIncomingSms(context, group.value)
+          String sendmessage=  sharedPreferences.getString("sendmessage", "not saved")
+            val preferences =
+                context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
+            val editor = sharedPreferences.edit()
+            editor.putString("sendmessage", group.value)
+            Log.d('message save', sendmessage)
         }
     }
 
@@ -152,11 +160,7 @@ object IncomingSmsHandler : MethodChannel.MethodCallHandler {
 
         backgroundFlutterEngine = FlutterEngine(context, flutterLoader, FlutterJNI())
         backgroundFlutterEngine.dartExecutor.executeDartCallback(dartEntryPoint)
-        val flutterRunArguments = FlutterRunArguments()
-        flutterRunArguments.bundlePath = FlutterMain.findAppBundlePath()
-        flutterRunArguments.entrypoint = flutterCallbackInformation.callbackName
-        flutterRunArguments.libraryPath = flutterCallbackInformation.callbackLibraryPath
-        backgroundFlutterEngine.runFromBundle(flutterRunArguments)
+
         backgroundChannel =
             MethodChannel(backgroundFlutterEngine.dartExecutor, Constants.CHANNEL_SMS_BACKGROUND)
         backgroundChannel.setMethodCallHandler(this)
@@ -215,6 +219,14 @@ object IncomingSmsHandler : MethodChannel.MethodCallHandler {
         flutterLoader = flutterInjector.flutterLoader()
         flutterLoader.startInitialization(context)
         flutterLoader.ensureInitializationComplete(context.applicationContext, null)
+
+        val flutterRunArguments = FlutterRunArguments()
+        flutterRunArguments.bundlePath = FlutterMain.findAppBundlePath()
+        flutterRunArguments.entrypoint = flutterCallbackInformation.callbackName
+        flutterRunArguments.libraryPath = flutterCallbackInformation.callbackLibraryPath
+
+        val backgroundFlutterEngine = FlutterEngine(this)
+        backgroundFlutterEngine.runFromBundle(flutterRunArguments)
     }
 
     fun setBackgroundMessageHandle(context: Context, handle: Long) {
