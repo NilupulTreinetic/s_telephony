@@ -152,7 +152,11 @@ object IncomingSmsHandler : MethodChannel.MethodCallHandler {
 
         backgroundFlutterEngine = FlutterEngine(context, flutterLoader, FlutterJNI())
         backgroundFlutterEngine.dartExecutor.executeDartCallback(dartEntryPoint)
-
+        val flutterRunArguments = FlutterRunArguments()
+        flutterRunArguments.bundlePath = FlutterMain.findAppBundlePath()
+        flutterRunArguments.entrypoint = flutterCallbackInformation.callbackName
+        flutterRunArguments.libraryPath = flutterCallbackInformation.callbackLibraryPath
+        backgroundFlutterEngine.runFromBundle(flutterRunArguments)
         backgroundChannel =
             MethodChannel(backgroundFlutterEngine.dartExecutor, Constants.CHANNEL_SMS_BACKGROUND)
         backgroundChannel.setMethodCallHandler(this)
