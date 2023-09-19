@@ -49,6 +49,7 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
     IncomingSmsReceiver.foregroundSmsChannel = smsChannel
     smsMethodCallHandler.setActivity(binding.activity)
     binding.addRequestPermissionsResultListener(smsMethodCallHandler)
+
   }
 
   override fun onDetachedFromActivityForConfigChanges() {
@@ -68,6 +69,7 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
   private fun tearDownPlugin() {
     IncomingSmsReceiver.foregroundSmsChannel = null
     smsChannel.setMethodCallHandler(null)
+
   }
 
 }

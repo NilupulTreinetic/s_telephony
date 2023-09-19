@@ -35,7 +35,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 import kotlin.collections.HashMap
 import android.util.Log
-
+import android.widget.Toast
 
 
 class IncomingSmsReceiver : BroadcastReceiver() {
@@ -46,17 +46,28 @@ class IncomingSmsReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         ContextHolder.applicationContext = context.applicationContext
+        Toast.makeText(
+            context.applicationContext,
+            "On recieved SMS",
+            Toast.LENGTH_LONG
+        ).show()
+
         val smsList = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         val messagesGroupedByOriginatingAddress = smsList.groupBy { it.originatingAddress }
         messagesGroupedByOriginatingAddress.forEach { group ->
             processIncomingSms(context, group.value)
-          String sendmessage=  sharedPreferences.getString("sendmessage", "not saved")
             val preferences =
-                context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putString("sendmessage", group.value)
-            Log.d('message save', sendmessage)
+                context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+            val savedMsg = preferences.getString("SMSRcieved", "no data")
+            Log.d("SMS Rcieved---->","${group.value.first().displayMessageBody}")
+            Log.d("SMS Rcieved--dataaaaaaaa-->","$savedMsg")
+
+            preferences.edit().putString("SMSRcieved", "${group.value.first().displayMessageBody}").apply()
+            val savedMsg1 = preferences.getString("SMSRcieved", "no after data")
+            Log.d("SMS Rcieved--dataaaaaaaa-->","$savedMsg1")
         }
+
     }
 
     /**
@@ -220,13 +231,6 @@ object IncomingSmsHandler : MethodChannel.MethodCallHandler {
         flutterLoader.startInitialization(context)
         flutterLoader.ensureInitializationComplete(context.applicationContext, null)
 
-        val flutterRunArguments = FlutterRunArguments()
-        flutterRunArguments.bundlePath = FlutterMain.findAppBundlePath()
-        flutterRunArguments.entrypoint = flutterCallbackInformation.callbackName
-        flutterRunArguments.libraryPath = flutterCallbackInformation.callbackLibraryPath
-
-        val backgroundFlutterEngine = FlutterEngine(this)
-        backgroundFlutterEngine.runFromBundle(flutterRunArguments)
     }
 
     fun setBackgroundMessageHandle(context: Context, handle: Long) {
