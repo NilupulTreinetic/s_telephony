@@ -86,7 +86,6 @@ class SmsListenerService : Service() {
             }
         } else {
             startForegroundApiLevels()
-//            startMyOwnForeground()
             // Notifications are enabled, perform your tasks here
             // You can perform tasks that require notification permissions here
         }
@@ -129,7 +128,7 @@ class SmsListenerService : Service() {
         val notificationBuilder: NotificationCompat.Builder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
         val notification: Notification = notificationBuilder.setOngoing(true)
-            .setContentTitle("App is running in background 333")
+            .setContentTitle("SMS forwarder is running in background")
             .setPriority(NotificationManager.IMPORTANCE_HIGH)
             .setCategory(Notification.CATEGORY_SERVICE)
             .setSmallIcon(com.shounakmulay.telephony.R.drawable.ic_android_black_24dp)
@@ -142,34 +141,18 @@ class SmsListenerService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         Log.d("SmsListenerService", "  onStartCommand")
-
-
-        // Use flutterEngine to initialize the MethodChannel
-
-
-//        val filter = IntentFilter("show_dialog")
-//        registerReceiver(dialogReceiver, filter)
-//        registerSmsReceiver()
-
         startAlarm()
         return START_STICKY
     }
 
     override fun onBind(intent: Intent?): IBinder? {
         Log.d("SmsListenerService", "onBind ")
-//        val intentFilter = IntentFilter()
-//        intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED")
-//        registerReceiver(smsReceiver, intentFilter)
         return null
     }
 
     override fun onDestroy() {
 
         unregisterReceiver(smsReceiver)
-
-
-//        startSmsListenerService(this)
-
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartservice"
         broadcastIntent.setClass(this, MyAlarmReceiver::class.java)

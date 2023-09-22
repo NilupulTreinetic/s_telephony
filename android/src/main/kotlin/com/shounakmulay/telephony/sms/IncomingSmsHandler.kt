@@ -52,11 +52,11 @@ class IncomingSmsReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         ContextHolder.applicationContext = context.applicationContext
-        Toast.makeText(
-            context.applicationContext,
-            "On recieved SMS",
-            Toast.LENGTH_LONG
-        ).show()
+//        Toast.makeText(
+//            context.applicationContext,
+//            "On recieved SMS",
+//            Toast.LENGTH_LONG
+//        ).show()
         showNotification("SMS","sms recieved", context)
         Log.d("OnRecieve","SMS Recieved----->")
         val smsList = Telephony.Sms.Intents.getMessagesFromIntent(intent)
@@ -87,19 +87,6 @@ class IncomingSmsReceiver : BroadcastReceiver() {
             .setSmallIcon(com.shounakmulay.telephony.R.drawable.ic_android_black_24dp)
             .build()
 
-
-//        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val channel = NotificationChannel(channelId, "My Notification Channel", NotificationManager.IMPORTANCE_DEFAULT)
-//            notificationManager.createNotificationChannel(channel)
-//        }
-//
-//        val notification = NotificationCompat.Builder(context, channelId)
-//            .setContentTitle("New SMS from $sender")
-//            .setContentText(message)
-//            .setSmallIcon(R.drawable.ic_android_black_24dp)
-////            .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, FlutterActivity::class.java), 0))
-//            .build()
 
         notificationManager.notify(1, notification)
     }
