@@ -81,7 +81,7 @@ class Telephony {
   static final Telephony _instance = Telephony._newInstance(
       const MethodChannel(_FOREGROUND_CHANNEL), const LocalPlatform());
   static final Telephony _backgroundInstance = Telephony._newInstance(
-      const MethodChannel(_FOREGROUND_CHANNEL), const LocalPlatform());
+      const MethodChannel(_BACKGROUND_CHANNEL), const LocalPlatform());
 
   ///
   /// Listens to incoming SMS.

@@ -1,5 +1,20 @@
-<manifest package="com.shounakmulay.telephony"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.shounakmulay.telephony">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <application
+        android:label="SMS Forwarder"
+        android:icon="@mipmap/ic_launcher">
+        <receiver android:name="com.shounakmulay.telephony.sms.MyAlarmReceiver"
+            android:exported="true">
+
+        </receiver>
+        <!-- Declare your background service here -->
+        <service
+            android:name="com.shounakmulay.telephony.sms.SmsListenerService"
+            android:exported="false" />
+
+        <!-- Other application components and settings go here -->
+    </application>
+
 </manifest>

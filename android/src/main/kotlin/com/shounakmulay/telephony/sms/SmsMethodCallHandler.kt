@@ -387,6 +387,7 @@ class SmsMethodCallHandler(
     foregroundChannel = channel
   }
 
+
   override fun onReceive(ctx: Context?, intent: Intent?) {
     if (intent != null) {
       when (intent.action) {

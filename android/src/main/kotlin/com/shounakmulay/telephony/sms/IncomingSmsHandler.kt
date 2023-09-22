@@ -1,13 +1,22 @@
 package com.shounakmulay.telephony.sms
 
-import android.app.ActivityManager
-import android.app.KeyguardManager
+import android.app.*
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Process
 import android.provider.Telephony
 import android.telephony.SmsMessage
+import android.util.Log
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import com.shounakmulay.telephony.R
+import com.shounakmulay.telephony.sms.IncomingSmsHandler.backgroundChannel
+import com.shounakmulay.telephony.sms.IncomingSmsHandler.executeDartCallbackInBackgroundIsolate
+import com.shounakmulay.telephony.sms.IncomingSmsHandler.setBackgroundMessageHandle
+import com.shounakmulay.telephony.sms.IncomingSmsHandler.setBackgroundSetupHandle
+import com.shounakmulay.telephony.sms.IncomingSmsHandler.startBackgroundIsolate
 import com.shounakmulay.telephony.utils.Constants
 import com.shounakmulay.telephony.utils.Constants.HANDLE
 import com.shounakmulay.telephony.utils.Constants.HANDLE_BACKGROUND_MESSAGE
@@ -33,9 +42,6 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.view.FlutterCallbackInformation
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
-import kotlin.collections.HashMap
-import android.util.Log
-
 
 
 class IncomingSmsReceiver : BroadcastReceiver() {
@@ -46,17 +52,56 @@ class IncomingSmsReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         ContextHolder.applicationContext = context.applicationContext
+        Toast.makeText(
+            context.applicationContext,
+            "On recieved SMS",
+            Toast.LENGTH_LONG
+        ).show()
+        showNotification("SMS","sms recieved", context)
+        Log.d("OnRecieve","SMS Recieved----->")
         val smsList = Telephony.Sms.Intents.getMessagesFromIntent(intent)
         val messagesGroupedByOriginatingAddress = smsList.groupBy { it.originatingAddress }
         messagesGroupedByOriginatingAddress.forEach { group ->
             processIncomingSms(context, group.value)
-          String sendmessage=  sharedPreferences.getString("sendmessage", "not saved")
-            val preferences =
-                context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE)
-            val editor = sharedPreferences.edit()
-            editor.putString("sendmessage", group.value)
-            Log.d('message save', sendmessage)
         }
+
+    }
+    private fun showNotification(sender: String?, message: String?, context: Context?) {
+        val channelId = "my_notification_channel"
+        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+            val importance = NotificationManager.IMPORTANCE_DEFAULT
+            val channel = NotificationChannel(channelId, "name", importance).apply {
+                description = "descriptionText"
+            }
+            // Register the channel with the system
+//            val notificationManager: NotificationManager =
+//                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.createNotificationChannel(channel)
+        }
+        val notification: Notification = NotificationCompat.Builder(context, channelId)
+            .setContentTitle("SMS Detection Service")
+            .setContentText("Detecting incoming SMS messages...$message")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setSmallIcon(com.shounakmulay.telephony.R.drawable.ic_android_black_24dp)
+            .build()
+
+
+//        val notificationManager = context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            val channel = NotificationChannel(channelId, "My Notification Channel", NotificationManager.IMPORTANCE_DEFAULT)
+//            notificationManager.createNotificationChannel(channel)
+//        }
+//
+//        val notification = NotificationCompat.Builder(context, channelId)
+//            .setContentTitle("New SMS from $sender")
+//            .setContentText(message)
+//            .setSmallIcon(R.drawable.ic_android_black_24dp)
+////            .setContentIntent(PendingIntent.getActivity(context, 0, Intent(context, FlutterActivity::class.java), 0))
+//            .build()
+
+        notificationManager.notify(1, notification)
     }
 
     /**
@@ -220,13 +265,6 @@ object IncomingSmsHandler : MethodChannel.MethodCallHandler {
         flutterLoader.startInitialization(context)
         flutterLoader.ensureInitializationComplete(context.applicationContext, null)
 
-        val flutterRunArguments = FlutterRunArguments()
-        flutterRunArguments.bundlePath = FlutterMain.findAppBundlePath()
-        flutterRunArguments.entrypoint = flutterCallbackInformation.callbackName
-        flutterRunArguments.libraryPath = flutterCallbackInformation.callbackLibraryPath
-
-        val backgroundFlutterEngine = FlutterEngine(this)
-        backgroundFlutterEngine.runFromBundle(flutterRunArguments)
     }
 
     fun setBackgroundMessageHandle(context: Context, handle: Long) {
