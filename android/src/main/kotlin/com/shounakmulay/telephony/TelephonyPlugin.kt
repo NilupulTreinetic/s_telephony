@@ -58,7 +58,6 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
     IncomingSmsReceiver.foregroundSmsChannel = smsChannel
     smsMethodCallHandler.setActivity(binding.activity)
     binding.addRequestPermissionsResultListener(smsMethodCallHandler)
-    Log.d("TelephonyPlugin","onAttachedToActivity ---->")
 
   }
 
