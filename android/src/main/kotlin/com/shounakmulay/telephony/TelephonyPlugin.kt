@@ -66,6 +66,8 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+    Log.d("TelephonyPlugin","onAttachedToActivity ---->")
+
     IncomingSmsReceiver.foregroundSmsChannel = smsChannel
     smsMethodCallHandler.setActivity(binding.activity)
     binding.addRequestPermissionsResultListener(smsMethodCallHandler)
