@@ -11,16 +11,16 @@ import android.util.Log
 class MyAlarmReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         // Start your service here
-        if (context != null &&!isServiceRunning(context, SmsListenerService::class.java)) {
-            val serviceIntent = Intent(context, SmsListenerService::class.java)
-            Log.d("MyAlarmReceiver", "onReceive")
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                context.startForegroundService(serviceIntent)
-            } else {
-                Log.d("MyAlarmReceiver", "MyAlarmReceiver onReceive")
-                context.startService(serviceIntent)
-            }
-        }
+//        if (context != null &&!isServiceRunning(context, SmsListenerService::class.java)) {
+//            val serviceIntent = Intent(context, SmsListenerService::class.java)
+//            Log.d("MyAlarmReceiver", "onReceive")
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                context.startForegroundService(serviceIntent)
+//            } else {
+//                Log.d("MyAlarmReceiver", "MyAlarmReceiver onReceive")
+//                context.startService(serviceIntent)
+//            }
+//        }
     }
 
     private fun isServiceRunning(context: Context, serviceClass: Class<*>): Boolean {

@@ -78,7 +78,7 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
 
     MethodChannel(messenger, SERVICE_MANAGE_CHANNEL).setMethodCallHandler { call, result ->
       if (call.method == "startSmsDetectionService") {
-        startSmsListenerService(context)
+//        startSmsListenerService(context)
       } else {
         result.notImplemented()
       }
