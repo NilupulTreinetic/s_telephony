@@ -34,13 +34,15 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     if (!this::binaryMessenger.isInitialized) {
       binaryMessenger = flutterPluginBinding.binaryMessenger
+      setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
+
     }
     Log.d("TelephonyPlugin","onAttachedToEngine---->")
-    if (!isPluginInitialized) {
-      binaryMessenger = flutterPluginBinding.binaryMessenger
-      setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
-      isPluginInitialized = true
-    }
+//    if (!isPluginInitialized) {
+//      binaryMessenger = flutterPluginBinding.binaryMessenger
+//      setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
+//      isPluginInitialized = true
+//    }
 //    setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
   }
 
