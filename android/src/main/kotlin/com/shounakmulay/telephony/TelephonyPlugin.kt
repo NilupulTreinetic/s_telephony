@@ -96,8 +96,7 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
         result.notImplemented()
       }
     }
-
-
+    Log.d("Set plugin", "call set plugin method  ")
     Log.d("Set plugin", "call set plugin method $isPluginInitialized")
   }
    fun startSmsListenerService(context: Context) {
