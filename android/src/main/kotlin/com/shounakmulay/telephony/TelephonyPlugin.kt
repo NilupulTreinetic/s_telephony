@@ -38,11 +38,11 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
 
     }
     Log.d("TelephonyPlugin","onAttachedToEngine---->")
-//    if (!isPluginInitialized) {
+    if (!isPluginInitialized) {
 //      binaryMessenger = flutterPluginBinding.binaryMessenger
 //      setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
-//      isPluginInitialized = true
-//    }
+      isPluginInitialized = true
+    }
 //    setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
   }
 
@@ -98,7 +98,7 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
     }
 
 
-    Log.d("Set plugin", "call set plugin method")
+    Log.d("Set plugin", "call set plugin method $isPluginInitialized")
   }
    fun startSmsListenerService(context: Context) {
 //    val serviceIntent = Intent(context, SmsListenerService::class.java)
