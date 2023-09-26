@@ -16,6 +16,10 @@ import com.shounakmulay.telephony.sms.*
 
 class TelephonyPlugin : FlutterPlugin, ActivityAware {
 
+  companion object {
+    private var isPluginInitialized = false
+  }
+
   private lateinit var smsChannel: MethodChannel
 
   private lateinit var smsMethodCallHandler: SmsMethodCallHandler
@@ -32,18 +36,23 @@ class TelephonyPlugin : FlutterPlugin, ActivityAware {
       binaryMessenger = flutterPluginBinding.binaryMessenger
     }
     Log.d("TelephonyPlugin","onAttachedToEngine---->")
-
-    setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
+    if (!isPluginInitialized) {
+      binaryMessenger = flutterPluginBinding.binaryMessenger
+      setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
+      isPluginInitialized = true
+    }
+//    setupPlugin(flutterPluginBinding.applicationContext, binaryMessenger)
   }
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     Log.d("TelephonyPlugin","onDetachedFromEngine ---->")
-
+    isPluginInitialized = false
     tearDownPlugin()
   }
 
   override fun onDetachedFromActivity() {
     Log.d("TelephonyPlugin","onDetachedFromActivity ---->")
+    isPluginInitialized = false
 
     tearDownPlugin()
   }
