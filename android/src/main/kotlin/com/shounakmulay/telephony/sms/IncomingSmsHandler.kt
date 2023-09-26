@@ -52,11 +52,10 @@ class IncomingSmsReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         ContextHolder.applicationContext = context.applicationContext
-//        Toast.makeText(
-//            context.applicationContext,
-//            "On recieved SMS",
-//            Toast.LENGTH_LONG
-//        ).show()
+      Toast.makeText(
+          context.applicationContext,           "On recieved SMS",
+           Toast.LENGTH_LONG
+       ).show()
         showNotification("SMS","sms recieved", context)
         Log.d("OnRecieve","SMS Recieved----->")
         val smsList = Telephony.Sms.Intents.getMessagesFromIntent(intent)
